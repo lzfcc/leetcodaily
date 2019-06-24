@@ -4,27 +4,7 @@ Mainly JavaScript, sometimes Swift.
 
 Leecode common snippets:
 
-1. Convertion from an array to binary tree
-```js
-function TreeNode(val) {
-    this.val = val;
-    this.left = this.right = null;
-}
-
-function build(array) {
-    let nodes = array.map(function(x){
-        return x != null ? new TreeNode(x) : null;
-    });
-    for(let i = 0; i < array.length; i++) {
-        if (nodes[i] == null) continue;
-        nodes[i].left = nodes[i * 2 + 1] || null;
-        nodes[i].right = nodes[i * 2 + 2] || null;
-    }
-    return nodes[0];
-}
-```
-
-2. String munipulation in Swift
+1. String munipulation in Swift
 ```swift
 extension String {
     func substring(in range: Range<Int>) -> Substring {
