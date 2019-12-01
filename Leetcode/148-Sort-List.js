@@ -1,7 +1,5 @@
-function ListNode(val) {
-    this.val = val;
-    this.next = null;
-}
+const ListNode = require('../Utility/SinglyLinkedListNode');
+const { array2LinkedList, linkedList2Array } = require('../Utility/Array2SinglyLinkedList');
 
 function splitList(head) {
     if (!head) {
@@ -72,27 +70,7 @@ var sortList = function(head) {
 }
 
 const testCase = [-84,-17,-85,170,186,-85];
-const head = makeList(testCase);
-
-function makeList(arr) {
-    const dummy = new ListNode(NaN);
-    let p = dummy;
-    for (const e of arr) {
-        const node = new ListNode(e);
-        p.next = node;
-        p = p.next;
-    }
-    return dummy.next;
-}
-
-function makeArray(head) {
-    const res = [];
-    while(head) {
-        res.push(head.val);
-        head = head.next;
-    }
-    return res;
-}
+const head = array2LinkedList(testCase);
 
 let res = sortList(head);
-console.log('Wrong! expected:', testCase.sort((x,y)=>x-y), 'result:', makeArray(res));
+console.log('Wrong! expected:', testCase.sort((x,y)=>x-y), 'result:', linkedList2Array(res));
