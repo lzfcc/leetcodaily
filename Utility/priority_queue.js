@@ -5,10 +5,10 @@
 //
 // The Array is stored from last entry to first: we assume queue() will be
 // the same speed either way, but this way dequeue() is O(1) instead of O(n).
-let ArrayStrategy = class ArrayStrategy {
+const _ArrayStrategy = class {
     constructor(options) {
-        this.comparator = (options != null ? options.comparator : undefined) || ((a, b) => a - b);
-        this.data = (options.initialValues != null ? options.initialValues.slice(0) : undefined) || [];
+        this.comparator = options.comparator;
+        this.data = options.initialValues;
         this.data.sort(this.comparator).reverse();
     }
 
@@ -29,12 +29,16 @@ let ArrayStrategy = class ArrayStrategy {
         this.data.length = 0;
     }
 
+    size() {
+        return this.data.length;
+    }
+
     _binarySearchForIndexReversed(value) {
         let low = 0;
         let high = this.data.length;
         while (low < high) {
             const mid = (low + high) >>> 1;
-            if (this.comparator(this.data[mid], value) >= 0) { // >=, instead of the usual <
+            if (this.comparator(this.data[mid], value) < 0) { // >=, instead of the usual <
                 low = mid + 1;
             } else {
                 high = mid;
@@ -44,11 +48,10 @@ let ArrayStrategy = class ArrayStrategy {
     };
 }
 
-let BinaryHeapStrategy = class BinaryHeapStrategy {
+const _BinaryHeapStrategy = class {
     constructor(options) {
-        this.comparator = (options != null ? options.comparator : undefined) || ((a, b) => a - b);
-        this.length = 0;
-        this.data = (options.initialValues != null ? options.initialValues.slice(0) : undefined) || [];
+        this.comparator = options.comparator;
+        this.data = options.initialValues;
         this._heapify();
     }
 
@@ -63,7 +66,6 @@ let BinaryHeapStrategy = class BinaryHeapStrategy {
     queue(value) {
         this.data.push(value);
         this._bubbleUp(this.data.length - 1);
-        return undefined;
     }
 
     dequeue() {
@@ -81,17 +83,18 @@ let BinaryHeapStrategy = class BinaryHeapStrategy {
     }
 
     clear() {
-        this.length = 0;
         this.data.length = 0;
+    }
+
+    size() {
+        return this.data.length;
     }
 
     _bubbleUp(pos) {
         while (pos > 0) {
             const parent = (pos - 1) >>> 1;
-            if (this.comparator(this.data[pos], this.data[parent]) < 0) {
-                const x = this.data[parent]; 
-                this.data[parent] = this.data[pos]; 
-                this.data[pos] = x;
+            if (this.comparator(this.data[pos], this.data[parent]) >= 0) {
+                [this.data[pos], this.data[parent]] = [this.data[parent], this.data[pos]]; 
                 pos = parent;
             } else {
                 break;
@@ -105,22 +108,66 @@ let BinaryHeapStrategy = class BinaryHeapStrategy {
             const left = (pos << 1) + 1;
             const right = left + 1;
             let minIndex = pos;
-            if ((left <= last) && (this.comparator(this.data[left], this.data[minIndex]) < 0)) {
+            if (left <= last && this.comparator(this.data[left], this.data[minIndex]) >= 0) {
                 minIndex = left;
             }
-            if ((right <= last) && (this.comparator(this.data[right], this.data[minIndex]) < 0)) {
+            if (right <= last && this.comparator(this.data[right], this.data[minIndex]) >= 0) {
                 minIndex = right;
             }
-
             if (minIndex !== pos) {
-                const x = this.data[minIndex]; 
-                this.data[minIndex] = this.data[pos]; 
-                this.data[pos] = x;
+                [this.data[minIndex], this.data[pos]] = [this.data[pos], this.data[minIndex]]; 
                 pos = minIndex;
             } else {
                 break;
             }
         }
+    }
+}
+
+// 如果单纯是 Heap Sort，不需要两个方向上的处理（BubbleUp 和 BubbleDown），仅需要一个 heapify。代码可以参考 https://www.geeksforgeeks.org/heap-sort/
+
+const Strategy = {
+    Heap: Symbol('Heap'),
+    Array: Symbol('Array'),
+};
+
+const Comparator = {
+    Greater: (a, b) => b - a,
+    Less: (a, b) => a - b,
+}
+
+class PriorityQueue {
+    constructor(nums = [], compare = Comparator.Less, strategy = Strategy.Heap) { // default: MaxHeap
+        this.internal = null;
+        const options = {
+            initialValues: nums,
+            comparator: compare,
+        }
+        if (strategy === Strategy.Heap) {
+            this.internal = new _BinaryHeapStrategy(options);
+        } else {
+            this.internal = new _ArrayStrategy(options);
+        }
+    }
+
+    queue(value) {
+        this.internal.queue(value);
+    }
+    
+    dequeue() {
+        return this.internal.dequeue();
+    }
+
+    peek() {
+        return this.internal.peek();
+    }
+
+    clear() {
+        this.internal.clear();
+    }
+
+    size() {
+        return this.internal.size();
     }
 }
 
@@ -189,3 +236,5 @@ function run(caseNum) {
     const d4 = new Date();
     console.log("Heap strategy time: ", (d4 - d3) / 1000, "s");
 }
+
+module.exports = { PriorityQueue, STRATEGY: Strategy, COMPARATOR: Comparator };
