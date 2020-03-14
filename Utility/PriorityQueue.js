@@ -237,4 +237,4 @@ function run(caseNum) {
     console.log("Heap strategy time: ", (d4 - d3) / 1000, "s");
 }
 
-module.exports = { PriorityQueue, STRATEGY: Strategy, COMPARATOR: Comparator };
+module.exports = { PriorityQueue, Strategy, Comparator };
