@@ -39,17 +39,6 @@ function BinarySearch3(A, start, end, T) {
 	return ret;
 }
 
-// C++ STL algorithm lower_bound() 实现 （不是 BinarySerch！）
-function LowerBound(A, start, end, T) { // 返回[first, last)内第一个不小于value的值的位置
-	while (start < end) {
-		mid = (start + end) >> 1;
-		if (nums[mid] < target) {
-			start = mid + 1;
-		} else {
-			end = mid;
-		}
-	}
-	return start; // last也行，因为[first, last)为空的时候它们重合
-};
+// 另外请参考：LowerBound.js
 
 module.exports = BinarySearch1;
