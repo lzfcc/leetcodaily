@@ -55,10 +55,19 @@ const _BinaryHeapStrategy = class {
         this._heapify();
     }
 
+    // 一般，heapify 是用 bubbleDown 策略
+    // _heapify() {
+    //     if (this.data.length > 0) {
+    //         for (let i = 1; i < this.data.length; i++) {
+    //             this._bubbleUp(i);
+    //         }
+    //     }
+    // }
+
     _heapify() {
-        if (this.data.length > 0) {
-            for (let i = 1; i < this.data.length; i++) {
-                this._bubbleUp(i);
+        if (this.data.length > 1) {
+            for (let i = this.data.length / 2 - 1; i >= 0; i--) { // 倒数第一个非叶节点
+                this._bubbleDown(i);
             }
         }
     }

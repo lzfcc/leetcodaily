@@ -1,0 +1,22 @@
+{
+  "name": "leetcodaily",
+  "version": "1.0.0",
+  "description": "Leetcode everyday. Mainly JavaScript, sometimes Swift.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lzfcc/leetcodaily.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lzfcc/leetcodaily/issues"
+  },
+  "homepage": "https://github.com/lzfcc/leetcodaily#readme",
+  "dependencies": {
+    "mnemonist": "^0.36.0"
+  }
+}
