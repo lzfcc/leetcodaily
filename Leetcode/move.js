@@ -1,3 +1,4 @@
+// 把 swift playground 工程中的源码 swift 拿出来，然后删除目录
 const fs = require('fs')
 const path = require('path')
 
@@ -15,10 +16,10 @@ files.forEach(function (filename) {
                 const [ id ] = filename.match(/\d+/)
                 const newPath = path.join(pwd, `${id}.swift`)
                 console.log(oldPath, newPath)
-                // fs.renameSync(oldPath, newPath) 
+                fs.renameSync(oldPath, newPath) 
             }
         })
-        console.log(fullname)
+        // console.log(fullname)
         fs.unlinkSync(fullname)  
     }
 })

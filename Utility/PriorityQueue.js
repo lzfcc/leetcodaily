@@ -66,7 +66,7 @@ const _BinaryHeapStrategy = class {
 
     _heapify() {
         if (this.data.length > 1) {
-            for (let i = this.data.length / 2 - 1; i >= 0; i--) { // 倒数第一个非叶节点
+            for (let i = (this.data.length >> 1) - 1; i >= 0; i--) { // 倒数第一个非叶节点
                 this._bubbleDown(i);
             }
         }
@@ -103,7 +103,7 @@ const _BinaryHeapStrategy = class {
         while (pos > 0) {
             const parent = (pos - 1) >>> 1;
             if (this.comparator(this.data[pos], this.data[parent]) >= 0) {
-                [this.data[pos], this.data[parent]] = [this.data[parent], this.data[pos]]; 
+                [this.data[pos], this.data[parent]] = [this.data[parent], this.data[pos]];
                 pos = parent;
             } else {
                 break;
@@ -124,7 +124,7 @@ const _BinaryHeapStrategy = class {
                 minIndex = right;
             }
             if (minIndex !== pos) {
-                [this.data[minIndex], this.data[pos]] = [this.data[pos], this.data[minIndex]]; 
+                [this.data[minIndex], this.data[pos]] = [this.data[pos], this.data[minIndex]];
                 pos = minIndex;
             } else {
                 break;
@@ -162,7 +162,7 @@ class PriorityQueue {
     queue(value) {
         this.internal.queue(value);
     }
-    
+
     dequeue() {
         return this.internal.dequeue();
     }
@@ -247,3 +247,5 @@ function run(caseNum) {
 }
 
 module.exports = { PriorityQueue, Strategy, Comparator };
+
+q = new PriorityQueue([8,4,2,1,7,9,10,13,10,4,6])
