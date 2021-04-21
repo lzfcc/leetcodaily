@@ -4,12 +4,13 @@ const TreeNode = require('./BinaryTreeNode');
  * @param array in leetcode style
  * @returns root tree node */
 exports.array2BinaryTree = function (array) {
-    let nodes = array.map(function (x) {
-        return x ? new TreeNode(x) : null;
-    });
+    if (!array) {
+        return null
+    }
+    let nodes = array.map(x => x ? new TreeNode(x) : null);
     let offset = 1;
     let i = 0;
-    while (i < nodes.length) {
+    while (offset < nodes.length) {
         if (nodes[i]) {
             if (offset < nodes.length) {
                 nodes[i].left = nodes[offset];
