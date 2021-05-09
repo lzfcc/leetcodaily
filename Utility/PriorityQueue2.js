@@ -46,7 +46,7 @@ export default class PriorityQueue {
 		return top;
 	}
 
-	peek() {
+	peak() {
 		return this.data[0];
 	}
 
