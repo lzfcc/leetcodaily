@@ -1,6 +1,6 @@
 // 算法竞赛入门经典 第九章
-const V = [2, 3, 5, 7];
-const S = 27;
+const V = [2, 3, 5, 7]; // 硬币面值
+const S = 27; // 总额
 
 const minv = new Array(S + 1).fill(Infinity);
 minv[0] = 0;
@@ -39,3 +39,17 @@ function print_ans(arr, S) {
 }
 
 print_ans(min_coins, S);
+
+//function print_ans (d, S, V, ans) {
+//	for (let i = 0; i < V.length; i++) {
+//		if (S >= V[i] && d[S] == d[S - V[i]] + 1) {
+//			ans[V[i]] = (ans[V[i]] || 0) + 1
+//			print_ans(d, S - V[i], V, ans)
+//			break
+//		}
+//	}
+//}
+//
+//const ans = {}
+//print_ans(minv, S, V, ans)
+//console.log(ans)

@@ -1,42 +1,30 @@
 // 全排列三个主题：求全排列，求第 k 个排列，求上一个/下一个全排列
 
 // 一、求全排列
-// 以下这个写法不好理解……
-var permute = function (nums) {
-    if (nums.length == 1) {
-        return [nums];  //attention: not [...nums]
-    }
-    let res = [];
-    let n = nums.length;
-    for (let i = 0; i < n; i++) {
-        const e = nums[i];
-        nums.splice(i, 1);
-        for (let p of permute(nums)) {  //attention: not for...in
-            res.push([e, ...p]);
-        }
-        nums.splice(i, 0, e);
-    }
-    return res;
-};
-
-// 好理解到版本（以下两版等价），但是输出顺序就比较乱
-var permute = function (nums) {
-    if (nums.length <= 1) {
-        return [nums];
-    }
-    const e = nums.pop();
-    const allButLastPermutations = permute(nums);
-    let res = [];
-    for (let p of allButLastPermutations) {
-        for (let i = 0; i <= p.length; i++) {
-            const tmp = [...p];
-            tmp.splice(i, 0, e)
-            res.push(tmp);
+// 算法竞赛入门经典
+var permute = function (nums, A = []) {
+    if (nums.length === A.length) {
+        console.log(A)
+    } else {
+        for (let i = 0; i < nums.length; i++) {
+            let ok = 1
+            for (let j = 0; j < A.length; j++) {
+                if (A[j] == nums[i]) {
+                    ok = 0
+                }
+            }
+            if (ok) {
+                A.push(nums[i])
+                permute(nums, A)
+                A.pop()
+            }
         }
     }
-    return res;
 };
 
+permute([1, 2, 3])
+
+// 好理解版本，但是输出顺序就比较乱
 var permute = function (nums) {
     if (nums.length <= 1) {
         return [nums];
@@ -55,8 +43,8 @@ var permute = function (nums) {
 
 // 以上方法都用到 splice，尽管 C++ 也有功能类似到 erase 和 insert 方法可以实现，但还是有性能问题。
 // 另外，如果有重复元素，输出的全排列中也有重复，这个问题如何解决呢？
-console.log(permute([1, 2, 3]));
-console.log(permute([1, 1, 3]));
+//console.log(permute([1, 2, 3]));
+//console.log(permute([1, 1, 3]));
 
 // 生成全排列的经典算法是 Heap 算法，https://en.wikipedia.org/wiki/Heap%27s_algorithm
 // 证明以及错误实现的那部分没看懂😓
@@ -84,6 +72,27 @@ function generate(k, A) {
 var arr = [4,3,2,1]//[1,2,3,4]
 generate(arr.length, arr);
 
+// 包含重复的全排列
+var permuteUnique = function(nums, bits = 0, arr = []) {
+    if (arr.length === nums.length) {
+        console.log(arr)
+        return
+    }
+    const set = new Set()
+    for (let i = 0; i < nums.length; i++) {
+        if ((bits & (1 << i)) || set.has(nums[i])) { // prevent missing or duplication  
+            continue
+        }
+        set.add(nums[i])
+        arr.push(nums[i])
+        permuteUnique(nums, bits | (1 << i), arr)
+        arr.pop()   
+    }
+};
+
+console.log('permutation unique')
+permuteUnique([1,1,2,3])
+
 // 二、求第 k 个排列
 /**
  * @returns 1 到 n 的全排列中第 k 个排列
@@ -91,23 +100,22 @@ generate(arr.length, arr);
  * @param {int} k 
  */
 function permutation(n, k) {
-    let facSeq = []; // 阶乘表
+    let facSeq = [1]; // 阶乘表
     let nums = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     let f = 1
-    for (let x of nums) {
+    for (let x = 1; x < 10; x++) {
         f *= x
         facSeq.push(f);
     }
 
     let res = 0;
     k--;
-    while (--n > 0) { // 依次确定每一位
-        const m = (k / facSeq[n - 1]) | 0;
-        res = res * 10 + nums[m];
-        k = k - m * facSeq[n - 1];
-        nums.splice(m, 1);
+    while (n-- > 0) {
+        let index = Math.floor(k / facSeq[n])
+        k = k % facSeq[n]
+        res = res * 10 + nums[index]
+        nums.splice(index, 1)
     }
-    res = res * 10 + nums[0];
     console.log(res)
 }
 
@@ -115,7 +123,7 @@ function permutation(n, k) {
 permutation(1, 1);
 permutation(3, 4);
 permutation(4, 13);
-permutation(5, 277);
+permutation(5, 87);
 
 
 // 三、next permuation
